@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+  {% for blog in blogs %}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata row">
+          <div class="col">
+            <a class="mr-2" href="?filterByUser={{blog.author.username}}">{{ blog.author }}</a>
+            <small class="text-muted">{{ blog.created_at }}</small>
+          </div>
+          <div class="col d-flex justify-content-end">
+            {% if user == blog.author %}
+              <a class="btn btn-outline-primary mr-2" style="align:right!" href="{%url 'blog:detail' blog.pk%}">Edit</a>
+            <a class="btn btn-outline-danger" style="align:right!" href="{%url 'blog:delete' blog.pk%}">Delete</a>
+            {%endif%}
+          </div>
+        </div>
+        <h5 class="text-primary">{{ blog.title }}</h5>
+        <p class="article-content">{{ blog.detail }}</p>
+      </div>
+    </article>
+  {% endfor %}
+  {% if is_paginated %}
+    {% if page_obj.has_previous %}
+      <a class="btn btn-outline-info" href="?page=1&filterByUser={{filterByUser}}">First </a>
+      <a class="btn btn-outline-info"
+         href="?page={{page_obj.previous_page_number}}&filterByUser={{filterByUser}}">Previous</a>
+    {%else%}
+      <a class="btn btn-outline-secondary" href="#">First </a>
+      <a class="btn btn-outline-secondary" href="#"> Previous </a>
+    {%endif%}
+    <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+    {% if page_obj.has_next %}
+      <a class="btn btn-outline-info"
+         href="?page={{page_obj.next_page_number}}&filterByUser={{filterByUser}}">Next</a>
+      <a class="btn btn-outline-info"
+         href="?page={{page_obj.paginator.num_pages}}&filterByUser={{filterByUser}}"> Last</a>
+    {%else%}
+      <a class="btn btn-outline-secondary" href="#"> Next </a>
+      <a class="btn btn-outline-secondary" href="#"> Last </a>
+    {%endif%}
+  {%endif%}
+{% endblock content %}
